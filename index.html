@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PlayZone - Free Online Games</title>
+<meta name="description" content="Play free online puzzle, chess, racing and arcade games.">
+<style>
+:root {
+  --bg:#0c1020;
+  --panel:#171d32;
+  --text:#f7f8ff;
+  --muted:#aab3ce;
+  --accent:#8b5cf6;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+a { color:inherit; text-decoration:none; }
+button,input { font:inherit; }
+header {
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#11172a;
+  border-bottom:1px solid #252d47;
+}
+.nav {
+  max-width:1200px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+}
+.logo {
+  font-size:23px;
+  font-weight:900;
+  letter-spacing:1px;
+  white-space:nowrap;
+}
+.logo span { color:#a78bfa; }
+.nav a:hover { color:#c4b5fd; }
+.nav-links { display:flex; gap:18px; font-size:14px; }
+main { max-width:1200px; margin:auto; padding:22px 18px 40px; }
+.hero {
+  position:relative;
+  overflow:hidden;
+  padding:35px 26px;
+  border-radius:22px;
+  background:linear-gradient(125deg,#5427a9,#7938c7 48%,#1769a8);
+}
+.hero:after {
+  content:"🎮";
+  position:absolute;
+  right:7%;
+  top:20px;
+  font-size:clamp(75px,14vw,145px);
+  transform:rotate(-12deg);
+  opacity:.9;
+}
+.hero h1 { font-size:clamp(30px,5vw,48px); margin:0 0 12px; }
+.hero p { max-width:430px; line-height:1.6; color:#eee7ff; }
+.primary {
+  display:inline-block;
+  margin-top:10px;
+  padding:12px 19px;
+  border-radius:12px;
+  background:#fff;
+  color:#5326a2;
+  font-weight:bold;
+}
+.search-wrap { margin:23px 0 16px; }
+.search {
+  display:block;
+  width:100%;
+  padding:14px 16px;
+  border-radius:13px;
+  border:1px solid #303954;
+  background:#171d32;
+  color:white;
+  outline:none;
+}
+.search:focus { border-color:#a78bfa; }
+.filters {
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  padding:3px 0 15px;
+}
+.filter {
+  flex-shrink:0;
+  border:1px solid #303954;
+  background:#171d32;
+  color:#cbd2e8;
+  padding:9px 15px;
+  border-radius:30px;
+  cursor:pointer;
+}
+.filter.active,.filter:hover {
+  background:#8b5cf6;
+  border-color:#8b5cf6;
+  color:white;
+}
+.section-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin:15px 0;
+}
+.section-head h2 { font-size:23px; margin:0; }
+.section-head small { color:var(--muted); }
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:17px;
+}
+.game {
+  display:block;
+  overflow:hidden;
+  background:var(--panel);
+  border:1px solid #252d47;
+  border-radius:17px;
+  transition:transform .18s,border-color .18s;
+}
+.game:hover {
+  transform:translateY(-4px);
+  border-color:#8b5cf6;
+}
+.art {
+  height:145px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:70px;
+  position:relative;
+}
+.art:after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(transparent,rgba(0,0,0,.12));
+  pointer-events:none;
+}
+.purple { background:linear-gradient(135deg,#5732a4,#b06cf0); }
+.blue { background:linear-gradient(135deg,#126ca5,#53c9e7); }
+.orange { background:linear-gradient(135deg,#b84e22,#ffb34d); }
+.green { background:linear-gradient(135deg,#14765e,#7adf93); }
+.pink { background:linear-gradient(135deg,#a83278,#f18dbb); }
+.dark { background:linear-gradient(135deg,#202a45,#5c729f); }
+.red { background:linear-gradient(135deg,#9d263c,#ff7165); }
+.yellow { background:linear-gradient(135deg,#a97916,#f7dc69); }
+.game-info { padding:14px; }
+.game-info h3 { font-size:17px; margin:0 0 7px; }
+.game-info p { margin:0; color:var(--muted); font-size:13px; }
+.play {
+  display:block;
+  text-align:center;
+  background:#292044;
+  color:#d9c8ff;
+  padding:10px;
+  margin-top:13px;
+  border-radius:9px;
+  font-size:13px;
+  font-weight:bold;
+}
+.game:hover .play { background:#8b5cf6; color:white; }
+.empty {
+  display:none;
+  padding:30px;
+  color:var(--muted);
+  text-align:center;
+}
+footer {
+  border-top:1px solid #252d47;
+  text-align:center;
+  padding:25px 15px;
+  color:var(--muted);
+  font-size:13px;
+}
+@media(min-width:900px) {
+  .grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .art { height:165px; }
+}
+@media(max-width:600px) {
+  .nav { padding:13px 14px; }
+  .nav-links { gap:11px; font-size:12px; }
+  .logo { font-size:19px; }
+  main { padding:16px 12px 30px; }
+  .hero { padding:26px 19px; }
+  .hero:after { right:2%; top:18px; opacity:.55; }
+  .hero h1,.hero p,.hero .primary { position:relative; z-index:1; }
+  .hero p { max-width:75%; font-size:14px; }
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:11px; }
+  .art { height:110px; font-size:55px; }
+  .game-info { padding:11px; }
+  .game-info h3 { font-size:15px; }
+  .game-info p { font-size:12px; }
+  .section-head h2 { font-size:20px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <nav class="nav">
+    <a class="logo" href="index.html">🎮 PLAY<span>ZONE</span></a>
+    <div class="nav-links">
+      <a href="#games">All Games</a>
+      <a href="#popular">Popular</a>
+    </div>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Ready to Play?</h1>
+    <p>Discover awesome games, beat your high scores
+       and challenge your brain. Your next adventure starts here!</p>
+    <a class="primary" href="#games">Explore Games ↓</a>
+  </section>
+
+  <div class="search-wrap">
+    <input id="search" class="search" type="search"
+      placeholder="🔍 Search games..." aria-label="Search games">
+  </div>
+
+  <div class="filters" aria-label="Game categories">
+    <button class="filter active" data-category="all">All Games</button>
+    <button class="filter" data-category="puzzle">🧩 Puzzle</button>
+    <button class="filter" data-category="arcade">👾 Arcade</button>
+    <button class="filter" data-category="racing">🏎️ Racing</button>
+    <button class="filter" data-category="strategy">♟️ Strategy</button>
+  </div>
+
+  <section id="games">
+    <div class="section-head" id="popular">
+      <h2>🔥 Popular Games</h2>
+      <small id="count">9 games</small>
+    </div>
+
+    <div class="grid" id="gameGrid">
+
+      <a class="game" href="block-puzzle.html"
+         data-category="puzzle" data-name="Block Puzzle">
+        <div class="art purple">🧩</div>
+        <div class="game-info">
+          <h3>Block Puzzle</h3>
+          <p>Puzzle · Brain Training</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="image-puzzle.html"
+         data-category="puzzle" data-name="Image Puzzle Jigsaw">
+        <div class="art blue">🖼️</div>
+        <div class="game-info">
+          <h3>Image Puzzle</h3>
+          <p>Jigsaw · Picture Fun</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="chess.html"
+         data-category="strategy" data-name="Chess Robot Human">
+        <div class="art dark">♟️</div>
+        <div class="game-info">
+          <h3>Chess</h3>
+          <p>Strategy · Play the Robot</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="racing-car.html"
+         data-category="racing" data-name="Racing Car">
+        <div class="art orange">🏎️</div>
+        <div class="game-info">
+          <h3>Racing Car</h3>
+          <p>Racing · Speed Challenge</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="endless-runner.html"
+         data-category="arcade" data-name="Endless Runner">
+        <div class="art green">🏃</div>
+        <div class="game-info">
+          <h3>Endless Runner</h3>
+          <p>Arcade · Run and Jump</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="adventure.html"
+         data-category="arcade" data-name="Platform Adventure">
+        <div class="art pink">🗺️</div>
+        <div class="game-info">
+          <h3>Adventure</h3>
+          <p>Arcade · Coins and Enemies</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="memory-game.html"
+         data-category="puzzle" data-name="Memory Match">
+        <div class="art yellow">🧠</div>
+        <div class="game-info">
+          <h3>Memory Match</h3>
+          <p>Puzzle · Test Your Memory</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="tic-tac-toe.html"
+         data-category="strategy" data-name="Tic Tac Toe">
+        <div class="art red">⭕</div>
+        <div class="game-info">
+          <h3>Tic Tac Toe</h3>
+          <p>Strategy · Two Players</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+      <a class="game" href="snake-game.html"
+         data-category="arcade" data-name="Snake Game">
+        <div class="art green">🐍</div>
+        <div class="game-info">
+          <h3>Snake Game</h3>
+          <p>Arcade · Classic Fun</p>
+          <span class="play">▶ Play Now</span>
+        </div>
+      </a>
+
+    </div>
+    <div id="empty" class="empty">No games found. Try another search.</div>
+  </section>
+</main>
+
+<footer>
+  <p>🎮 PLAYZONE</p>
+  <p>Made for gamers, by gamers.</p>
+  <p>© <span id="year"></span> PlayZone</p>
+</footer>
+
+<script>
+const search = document.getElementById("search");
+const cards = [...document.querySelectorAll(".game")];
+const filters = [...document.querySelectorAll(".filter")];
+const count = document.getElementById("count");
+const empty = document.getElementById("empty");
+let category = "all";
+
+function updateGames() {
+  const query = search.value.toLowerCase().trim();
+  let visible = 0;
+
+  cards.forEach(card => {
+    const matchesName =
+      card.dataset.name.toLowerCase().includes(query);
+    const matchesCategory =
+      category === "all" || card.dataset.category === category;
+    const show = matchesName && matchesCategory;
+
+    card.style.display = show ? "" : "none";
+    if (show) visible++;
+  });
+
+  count.textContent = visible + (visible === 1 ? " game" : " games");
+  empty.style.display = visible ? "none" : "block";
+}
+
+filters.forEach(button => {
+  button.addEventListener("click", () => {
+    category = button.dataset.category;
+    filters.forEach(item => item.classList.remove("active"));
+    button.classList.add("active");
+    updateGames();
+  });
+});
+
+search.addEventListener("input", updateGames);
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+</script>
+</body>
+</html>
